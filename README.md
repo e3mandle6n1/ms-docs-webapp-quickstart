@@ -1,39 +1,42 @@
----
-page_type: sample
-description: "A minimal sample app that can be used to demonstrate deploying FastAPI apps to Azure App Service."
-languages:
-- python
-products:
-- azure
-- azure-app-service
----
+# FastAPI Web App
 
-# Deploy a Python (FastAPI) web app to Azure App Service - Sample Application
+A lightweight FastAPI app with server-rendered HTML pages, static assets, and Azure deployment support via `azd`.
 
-This is the sample FastAPI application for the Azure Quickstart [Deploy a Python (Django, Flask or FastAPI) web app to Azure App Service](https://docs.microsoft.com/en-us/azure/app-service/quickstart-python). For instructions on how to create the Azure resources and deploy the application to Azure, refer to the Quickstart article.
+## Tech Stack
 
-Sample applications are available for the other frameworks here:
-- Django [https://github.com/Azure-Samples/msdocs-python-django-webapp-quickstart](https://github.com/Azure-Samples/msdocs-python-django-webapp-quickstart)
-- Flask [https://github.com/Azure-Samples/msdocs-python-flask-webapp-quickstart](https://github.com/Azure-Samples/msdocs-python-flask-webapp-quickstart)
+- Python + FastAPI
+- Jinja2 templates
+- Bootstrap (local static assets)
+- Azure App Service (via Azure Developer CLI)
 
-If you need an Azure account, you can [create one for free](https://azure.microsoft.com/en-us/free/).
+## Run Locally
 
-## Local Testing
+1. Create and activate a virtual environment.
+2. Install dependencies:
 
-To try the application on your local machine:
+   `pip install -r requirements.txt`
 
-### Install the requirements
+3. Start the app:
 
-`pip install -r requirements.txt`
+   `uvicorn main:app --reload`
 
-### Start the application
+4. Open:
 
-`uvicorn main:app --reload`
+   [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
-### Example call
+## Deploy to Azure
 
-http://127.0.0.1:8000/
+1. Sign in and provision/deploy:
 
-## Next Steps
+   `azd up`
 
-To learn more about FastAPI, see [FastAPI](https://fastapi.tiangolo.com/).
+2. For subsequent deployments:
+
+   `azd deploy`
+
+## Project Structure
+
+- `main.py` FastAPI entrypoint and routes
+- `templates/` HTML templates
+- `static/` CSS, JS, and image assets
+- `infra/` Azure infrastructure definitions

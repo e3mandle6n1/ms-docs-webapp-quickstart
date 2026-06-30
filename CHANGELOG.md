@@ -1,13 +1,8 @@
-## [project-title] Changelog
+# Changelog
 
-<a name="x.y.z"></a>
-# x.y.z (yyyy-mm-dd)
+All notable changes to this project will be documented in this file.
 
-*Features*
-* ...
+## [Unreleased]
 
-*Bug Fixes*
-* ...
-
-*Breaking Changes*
-* ...
+### Changed
+- Replaced sample/template documentation and branding with project-specific content.
