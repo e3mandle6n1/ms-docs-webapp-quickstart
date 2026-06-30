@@ -14,7 +14,11 @@ templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
     print('Request for index page received')
-    return templates.TemplateResponse('index.html', {"request": request})
+    return templates.TemplateResponse(
+        request=request,
+        name="index.html",
+        context={"request": request},
+    )
 
 @app.get('/favicon.ico')
 async def favicon():
@@ -27,7 +31,11 @@ async def favicon():
 async def hello(request: Request, name: str = Form(...)):
     if name:
         print('Request for hello page received with name=%s' % name)
-        return templates.TemplateResponse('hello.html', {"request": request, 'name':name})
+        return templates.TemplateResponse(
+            request=request,
+            name="hello.html",
+            context={"request": request, "name": name},
+        )
     else:
         print('Request for hello page received with no name or blank name -- redirecting')
         return RedirectResponse(request.url_for("index"), status_code=status.HTTP_302_FOUND)
