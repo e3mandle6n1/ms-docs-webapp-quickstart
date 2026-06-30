@@ -1,7 +1,8 @@
 from fastapi import FastAPI, Form, Request, status
-from fastapi.responses import HTMLResponse, FileResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, FileResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from pathlib import Path
 import uvicorn
 
 
@@ -16,9 +17,10 @@ async def index(request: Request):
 
 @app.get('/favicon.ico')
 async def favicon():
-    file_name = 'favicon.ico'
-    file_path = './static/' + file_name
-    return FileResponse(path=file_path, headers={'mimetype': 'image/vnd.microsoft.icon'})
+    file_path = Path("static/favicon.ico")
+    if file_path.exists():
+        return FileResponse(path=str(file_path), media_type="image/vnd.microsoft.icon")
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 @app.post('/hello', response_class=HTMLResponse)
 async def hello(request: Request, name: str = Form(...)):
