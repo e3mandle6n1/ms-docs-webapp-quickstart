@@ -7,8 +7,9 @@ import uvicorn
 
 
 app = FastAPI()
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
+BASE_DIR = Path(__file__).resolve().parent
+app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
+templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
@@ -17,7 +18,7 @@ async def index(request: Request):
 
 @app.get('/favicon.ico')
 async def favicon():
-    file_path = Path("static/favicon.ico")
+    file_path = BASE_DIR / "static" / "favicon.ico"
     if file_path.exists():
         return FileResponse(path=str(file_path), media_type="image/vnd.microsoft.icon")
     return Response(status_code=status.HTTP_204_NO_CONTENT)
