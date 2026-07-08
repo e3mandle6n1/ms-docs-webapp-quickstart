@@ -1,0 +1,51 @@
+name: Deploy FastAPI Web App to Azure Container Instances
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      AZURE_ENV_NAME: msdocs-python-fastapi-webapp-quickstart-dev
+      AZURE_LOCATION: southafricanorth
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      AZURE_CONTAINER_REGISTRY_NAME: ${{ secrets.AZURE_CONTAINER_REGISTRY_NAME }}
+      AZURE_CONTAINER_REGISTRY_RESOURCE_GROUP: ${{ secrets.AZURE_CONTAINER_REGISTRY_RESOURCE_GROUP }}
+      AZURE_CONTAINER_IMAGE_NAME: fastapi-webapp
+      AZURE_CONTAINER_IMAGE_TAG: ${{ github.sha }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install azd
+        uses: Azure/setup-azd@v2
+
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Configure azd to use Azure CLI auth
+        run: azd config set auth.useAzCliAuth true
+
+      - name: Log in to Azure Container Registry
+        run: az acr login --name "${{ secrets.AZURE_CONTAINER_REGISTRY_NAME }}"
+
+      - name: Build and push container image
+        run: |
+          IMAGE="${{ secrets.AZURE_CONTAINER_REGISTRY_NAME }}.azurecr.io/${{ env.AZURE_CONTAINER_IMAGE_NAME }}:${{ env.AZURE_CONTAINER_IMAGE_TAG }}"
+          docker buildx build --platform linux/amd64 -t "$IMAGE" --push .
+
+      - name: Provision Azure Container Instance
+        run: azd provision --no-prompt

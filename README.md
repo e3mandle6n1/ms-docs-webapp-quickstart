@@ -127,6 +127,26 @@ Or check from the CLI:
 az container list --resource-group <deployment-rg> -o table
 ```
 
+## GitHub Actions
+
+CI/CD is defined in `.github/workflows/azure-dev.yml`. On push to `main`, the workflow:
+
+1. Logs in to Azure via OIDC
+2. Builds and pushes a `linux/amd64` image to ACR (tagged with the commit SHA)
+3. Runs `azd provision` to update the ACI container
+
+### Required repository secrets
+
+| Secret | Description |
+|--------|-------------|
+| `AZURE_CLIENT_ID` | App registration used for GitHub OIDC (e.g. `gha-fastapi-deploy`) |
+| `AZURE_TENANT_ID` | Azure AD tenant ID |
+| `AZURE_SUBSCRIPTION_ID` | Target subscription |
+| `AZURE_CONTAINER_REGISTRY_NAME` | ACR name (without `.azurecr.io`) |
+| `AZURE_CONTAINER_REGISTRY_RESOURCE_GROUP` | Resource group containing the ACR |
+
+The Node 20 deprecation warning from GitHub Actions is informational; current action versions run on Node 24 by default.
+
 ## Routes
 
 <details>
@@ -169,6 +189,41 @@ Returns `static/favicon.ico` when present, otherwise `204 No Content`.
 </details>
 
 ## Troubleshooting
+
+### `AADSTS700213` — No matching federated identity record (GitHub Actions OIDC)
+
+**Symptoms**
+
+```
+No matching federated identity record found for presented assertion subject
+'repo:e3mandle6n1/<repo-name>:ref:refs/heads/main'
+```
+
+**Cause**
+
+The GitHub repo name or branch in Azure AD's federated credential does not exactly match the repository running the workflow.
+
+**Fix**
+
+Add (or update) a federated credential on your GitHub Actions app registration so the **subject** matches your repo:
+
+```bash
+az ad app federated-credential create --id <app-id> --parameters '{
+  "name": "github-<repo-name>-main",
+  "issuer": "https://token.actions.githubusercontent.com",
+  "subject": "repo:e3mandle6n1/<repo-name>:ref:refs/heads/main",
+  "description": "GitHub Actions OIDC for <repo-name> main branch",
+  "audiences": ["api://AzureADTokenExchange"]
+}'
+```
+
+List existing credentials to avoid duplicates:
+
+```bash
+az ad app federated-credential list --id <app-id> -o table
+```
+
+Ensure GitHub repository secrets are set: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID`, `AZURE_CONTAINER_REGISTRY_NAME`, `AZURE_CONTAINER_REGISTRY_RESOURCE_GROUP`.
 
 ### ACR not found during `azd provision`
 
@@ -256,5 +311,5 @@ msdocs-python-fastapi-webapp-quickstart/
 ├── .dockerignore
 └── .github/
     └── workflows/
-        └── deploy-appservice.yml
+        └── azure-dev.yml
 ```
