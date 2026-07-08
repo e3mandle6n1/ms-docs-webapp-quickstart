@@ -1,0 +1,709 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.44.1.10279",
+      "templateHash": "10687619226422475253"
+    }
+  },
+  "parameters": {
+    "environmentName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "metadata": {
+        "description": "Environment name used for resource naming and tags."
+      }
+    },
+    "location": {
+      "type": "string",
+      "minLength": 1,
+      "metadata": {
+        "description": "Primary Azure region for all resources."
+      }
+    },
+    "resourceGroupName": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Optional override for the resource group name."
+      }
+    },
+    "containerInstanceName": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Optional override for the container instance name."
+      }
+    },
+    "dnsNameLabel": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Optional override for the public DNS name label."
+      }
+    },
+    "acrName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Azure Container Registry."
+      }
+    },
+    "useExistingAcr": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": {
+        "description": "When true, references an existing ACR instead of creating a new one."
+      }
+    },
+    "acrResourceGroupName": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Resource group containing the existing ACR. Leave empty when the registry is in the deployment resource group."
+      }
+    },
+    "containerImageName": {
+      "type": "string",
+      "defaultValue": "fastapi-webapp",
+      "metadata": {
+        "description": "Container image repository name in ACR."
+      }
+    },
+    "containerImageTag": {
+      "type": "string",
+      "defaultValue": "latest",
+      "metadata": {
+        "description": "Container image tag in ACR."
+      }
+    },
+    "containerPort": {
+      "type": "int",
+      "defaultValue": 8000,
+      "metadata": {
+        "description": "Container port exposed by the application."
+      }
+    }
+  },
+  "variables": {
+    "$fxv#0": {
+      "analysisServicesServers": "as",
+      "apiManagementService": "apim-",
+      "appConfigurationConfigurationStores": "appcs-",
+      "appManagedEnvironments": "cae-",
+      "appContainerApps": "ca-",
+      "authorizationPolicyDefinitions": "policy-",
+      "automationAutomationAccounts": "aa-",
+      "blueprintBlueprints": "bp-",
+      "blueprintBlueprintsArtifacts": "bpa-",
+      "cacheRedis": "redis-",
+      "cdnProfiles": "cdnp-",
+      "cdnProfilesEndpoints": "cdne-",
+      "cognitiveServicesAccounts": "cog-",
+      "cognitiveServicesFormRecognizer": "cog-fr-",
+      "cognitiveServicesTextAnalytics": "cog-ta-",
+      "computeAvailabilitySets": "avail-",
+      "computeCloudServices": "cld-",
+      "computeDiskEncryptionSets": "des",
+      "computeDisks": "disk",
+      "computeDisksOs": "osdisk",
+      "computeGalleries": "gal",
+      "computeSnapshots": "snap-",
+      "computeVirtualMachines": "vm",
+      "computeVirtualMachineScaleSets": "vmss-",
+      "containerInstanceContainerGroups": "ci",
+      "containerRegistryRegistries": "cr",
+      "containerServiceManagedClusters": "aks-",
+      "databricksWorkspaces": "dbw-",
+      "dataFactoryFactories": "adf-",
+      "dataLakeAnalyticsAccounts": "dla",
+      "dataLakeStoreAccounts": "dls",
+      "dataMigrationServices": "dms-",
+      "dBforMySQLServers": "mysql-",
+      "dBforPostgreSQLServers": "psql-",
+      "devicesIotHubs": "iot-",
+      "devicesProvisioningServices": "provs-",
+      "devicesProvisioningServicesCertificates": "pcert-",
+      "documentDBDatabaseAccounts": "cosmos-",
+      "eventGridDomains": "evgd-",
+      "eventGridDomainsTopics": "evgt-",
+      "eventGridEventSubscriptions": "evgs-",
+      "eventHubNamespaces": "evhns-",
+      "eventHubNamespacesEventHubs": "evh-",
+      "hdInsightClustersHadoop": "hadoop-",
+      "hdInsightClustersHbase": "hbase-",
+      "hdInsightClustersKafka": "kafka-",
+      "hdInsightClustersMl": "mls-",
+      "hdInsightClustersSpark": "spark-",
+      "hdInsightClustersStorm": "storm-",
+      "hybridComputeMachines": "arcs-",
+      "insightsActionGroups": "ag-",
+      "insightsComponents": "appi-",
+      "keyVaultVaults": "kv-",
+      "kubernetesConnectedClusters": "arck",
+      "kustoClusters": "dec",
+      "kustoClustersDatabases": "dedb",
+      "loadTesting": "lt-",
+      "logicIntegrationAccounts": "ia-",
+      "logicWorkflows": "logic-",
+      "machineLearningServicesWorkspaces": "mlw-",
+      "managedIdentityUserAssignedIdentities": "id-",
+      "managementManagementGroups": "mg-",
+      "migrateAssessmentProjects": "migr-",
+      "networkApplicationGateways": "agw-",
+      "networkApplicationSecurityGroups": "asg-",
+      "networkAzureFirewalls": "afw-",
+      "networkBastionHosts": "bas-",
+      "networkConnections": "con-",
+      "networkDnsZones": "dnsz-",
+      "networkExpressRouteCircuits": "erc-",
+      "networkFirewallPolicies": "afwp-",
+      "networkFirewallPoliciesWebApplication": "waf",
+      "networkFirewallPoliciesRuleGroups": "wafrg",
+      "networkFrontDoors": "fd-",
+      "networkFrontdoorWebApplicationFirewallPolicies": "fdfp-",
+      "networkLoadBalancersExternal": "lbe-",
+      "networkLoadBalancersInternal": "lbi-",
+      "networkLoadBalancersInboundNatRules": "rule-",
+      "networkLocalNetworkGateways": "lgw-",
+      "networkNatGateways": "ng-",
+      "networkNetworkInterfaces": "nic-",
+      "networkNetworkSecurityGroups": "nsg-",
+      "networkNetworkSecurityGroupsSecurityRules": "nsgsr-",
+      "networkNetworkWatchers": "nw-",
+      "networkPrivateDnsZones": "pdnsz-",
+      "networkPrivateLinkServices": "pl-",
+      "networkPublicIPAddresses": "pip-",
+      "networkPublicIPPrefixes": "ippre-",
+      "networkRouteFilters": "rf-",
+      "networkRouteTables": "rt-",
+      "networkRouteTablesRoutes": "udr-",
+      "networkTrafficManagerProfiles": "traf-",
+      "networkVirtualNetworkGateways": "vgw-",
+      "networkVirtualNetworks": "vnet-",
+      "networkVirtualNetworksSubnets": "snet-",
+      "networkVirtualNetworksVirtualNetworkPeerings": "peer-",
+      "networkVirtualWans": "vwan-",
+      "networkVpnGateways": "vpng-",
+      "networkVpnGatewaysVpnConnections": "vcn-",
+      "networkVpnGatewaysVpnSites": "vst-",
+      "notificationHubsNamespaces": "ntfns-",
+      "notificationHubsNamespacesNotificationHubs": "ntf-",
+      "operationalInsightsWorkspaces": "log-",
+      "portalDashboards": "dash-",
+      "powerBIDedicatedCapacities": "pbi-",
+      "purviewAccounts": "pview-",
+      "recoveryServicesVaults": "rsv-",
+      "resourcesResourceGroups": "rg-",
+      "searchSearchServices": "srch-",
+      "serviceBusNamespaces": "sb-",
+      "serviceBusNamespacesQueues": "sbq-",
+      "serviceBusNamespacesTopics": "sbt-",
+      "serviceEndPointPolicies": "se-",
+      "serviceFabricClusters": "sf-",
+      "signalRServiceSignalR": "sigr",
+      "sqlManagedInstances": "sqlmi-",
+      "sqlServers": "sql-",
+      "sqlServersDataWarehouse": "sqldw-",
+      "sqlServersDatabases": "sqldb-",
+      "sqlServersDatabasesStretch": "sqlstrdb-",
+      "storageStorageAccounts": "st",
+      "storageStorageAccountsVm": "stvm",
+      "storSimpleManagers": "ssimp",
+      "streamAnalyticsCluster": "asa-",
+      "synapseWorkspaces": "syn",
+      "synapseWorkspacesAnalyticsWorkspaces": "synw",
+      "synapseWorkspacesSqlPoolsDedicated": "syndp",
+      "synapseWorkspacesSqlPoolsSpark": "synsp",
+      "timeSeriesInsightsEnvironments": "tsi-",
+      "webServerFarms": "plan-",
+      "webSitesAppService": "app-",
+      "webSitesAppServiceEnvironment": "ase-",
+      "webSitesFunctions": "func-",
+      "webStaticSites": "stapp-"
+    },
+    "abbrs": "[variables('$fxv#0')]",
+    "tags": {
+      "environment": "[parameters('environmentName')]",
+      "workload": "fastapi-webapp",
+      "managedBy": "azd"
+    },
+    "resourceToken": "[toLower(uniqueString(subscription().id, parameters('environmentName'), parameters('location')))]",
+    "resolvedAcrName": "[parameters('acrName')]",
+    "resolvedDnsNameLabel": "[if(not(empty(parameters('dnsNameLabel'))), parameters('dnsNameLabel'), format('{0}{1}', variables('abbrs').containerInstanceContainerGroups, variables('resourceToken')))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/resourceGroups",
+      "apiVersion": "2021-04-01",
+      "name": "[if(not(empty(parameters('resourceGroupName'))), parameters('resourceGroupName'), format('{0}{1}', variables('abbrs').resourcesResourceGroups, parameters('environmentName')))]",
+      "location": "[parameters('location')]",
+      "tags": "[variables('tags')]"
+    },
+    {
+      "condition": "[not(parameters('useExistingAcr'))]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2025-04-01",
+      "name": "registry",
+      "resourceGroup": "[if(not(empty(parameters('resourceGroupName'))), parameters('resourceGroupName'), format('{0}{1}', variables('abbrs').resourcesResourceGroups, parameters('environmentName')))]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "name": {
+            "value": "[variables('resolvedAcrName')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "tags": {
+            "value": "[variables('tags')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.44.1.10279",
+              "templateHash": "9234385935248085579"
+            },
+            "description": "Creates an Azure Container Registry."
+          },
+          "parameters": {
+            "name": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            },
+            "tags": {
+              "type": "object",
+              "defaultValue": {}
+            },
+            "sku": {
+              "type": "string",
+              "defaultValue": "Basic"
+            },
+            "adminUserEnabled": {
+              "type": "bool",
+              "defaultValue": true
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.ContainerRegistry/registries",
+              "apiVersion": "2023-07-01",
+              "name": "[parameters('name')]",
+              "location": "[parameters('location')]",
+              "tags": "[parameters('tags')]",
+              "sku": {
+                "name": "[parameters('sku')]"
+              },
+              "properties": {
+                "adminUserEnabled": "[parameters('adminUserEnabled')]"
+              }
+            }
+          ],
+          "outputs": {
+            "loginServer": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.ContainerRegistry/registries', parameters('name')), '2023-07-01').loginServer]"
+            },
+            "name": {
+              "type": "string",
+              "value": "[parameters('name')]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', if(not(empty(parameters('resourceGroupName'))), parameters('resourceGroupName'), format('{0}{1}', variables('abbrs').resourcesResourceGroups, parameters('environmentName'))))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2025-04-01",
+      "name": "container-identity",
+      "resourceGroup": "[if(not(empty(parameters('resourceGroupName'))), parameters('resourceGroupName'), format('{0}{1}', variables('abbrs').resourcesResourceGroups, parameters('environmentName')))]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "name": {
+            "value": "[format('{0}{1}', variables('abbrs').managedIdentityUserAssignedIdentities, variables('resourceToken'))]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "tags": {
+            "value": "[variables('tags')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.44.1.10279",
+              "templateHash": "758538183496474627"
+            },
+            "description": "Creates a user-assigned managed identity."
+          },
+          "parameters": {
+            "name": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            },
+            "tags": {
+              "type": "object",
+              "defaultValue": {}
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+              "apiVersion": "2023-01-31",
+              "name": "[parameters('name')]",
+              "location": "[parameters('location')]",
+              "tags": "[parameters('tags')]"
+            }
+          ],
+          "outputs": {
+            "id": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('name'))]"
+            },
+            "principalId": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('name')), '2023-01-31').principalId]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', if(not(empty(parameters('resourceGroupName'))), parameters('resourceGroupName'), format('{0}{1}', variables('abbrs').resourcesResourceGroups, parameters('environmentName'))))]"
+      ]
+    },
+    {
+      "condition": "[empty(parameters('acrResourceGroupName'))]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2025-04-01",
+      "name": "acr-pull-role",
+      "resourceGroup": "[if(not(empty(parameters('resourceGroupName'))), parameters('resourceGroupName'), format('{0}{1}', variables('abbrs').resourcesResourceGroups, parameters('environmentName')))]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "principalId": {
+            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, if(not(empty(parameters('resourceGroupName'))), parameters('resourceGroupName'), format('{0}{1}', variables('abbrs').resourcesResourceGroups, parameters('environmentName')))), 'Microsoft.Resources/deployments', 'container-identity'), '2025-04-01').outputs.principalId.value]"
+          },
+          "registryName": {
+            "value": "[variables('resolvedAcrName')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.44.1.10279",
+              "templateHash": "6469321454304031855"
+            },
+            "description": "Grants AcrPull on a container registry to a managed identity."
+          },
+          "parameters": {
+            "principalId": {
+              "type": "string"
+            },
+            "registryName": {
+              "type": "string"
+            }
+          },
+          "variables": {
+            "acrPullRoleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d')]"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2022-04-01",
+              "scope": "[resourceId('Microsoft.ContainerRegistry/registries', parameters('registryName'))]",
+              "name": "[guid(parameters('principalId'), resourceId('Microsoft.ContainerRegistry/registries', parameters('registryName')), variables('acrPullRoleDefinitionId'))]",
+              "properties": {
+                "roleDefinitionId": "[variables('acrPullRoleDefinitionId')]",
+                "principalId": "[parameters('principalId')]",
+                "principalType": "ServicePrincipal"
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, if(not(empty(parameters('resourceGroupName'))), parameters('resourceGroupName'), format('{0}{1}', variables('abbrs').resourcesResourceGroups, parameters('environmentName')))), 'Microsoft.Resources/deployments', 'container-identity')]",
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', if(not(empty(parameters('resourceGroupName'))), parameters('resourceGroupName'), format('{0}{1}', variables('abbrs').resourcesResourceGroups, parameters('environmentName'))))]"
+      ]
+    },
+    {
+      "condition": "[not(empty(parameters('acrResourceGroupName')))]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2025-04-01",
+      "name": "acr-pull-role",
+      "resourceGroup": "[parameters('acrResourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "principalId": {
+            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, if(not(empty(parameters('resourceGroupName'))), parameters('resourceGroupName'), format('{0}{1}', variables('abbrs').resourcesResourceGroups, parameters('environmentName')))), 'Microsoft.Resources/deployments', 'container-identity'), '2025-04-01').outputs.principalId.value]"
+          },
+          "registryName": {
+            "value": "[variables('resolvedAcrName')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.44.1.10279",
+              "templateHash": "6469321454304031855"
+            },
+            "description": "Grants AcrPull on a container registry to a managed identity."
+          },
+          "parameters": {
+            "principalId": {
+              "type": "string"
+            },
+            "registryName": {
+              "type": "string"
+            }
+          },
+          "variables": {
+            "acrPullRoleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d')]"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2022-04-01",
+              "scope": "[resourceId('Microsoft.ContainerRegistry/registries', parameters('registryName'))]",
+              "name": "[guid(parameters('principalId'), resourceId('Microsoft.ContainerRegistry/registries', parameters('registryName')), variables('acrPullRoleDefinitionId'))]",
+              "properties": {
+                "roleDefinitionId": "[variables('acrPullRoleDefinitionId')]",
+                "principalId": "[parameters('principalId')]",
+                "principalType": "ServicePrincipal"
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, if(not(empty(parameters('resourceGroupName'))), parameters('resourceGroupName'), format('{0}{1}', variables('abbrs').resourcesResourceGroups, parameters('environmentName')))), 'Microsoft.Resources/deployments', 'container-identity')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2025-04-01",
+      "name": "web",
+      "resourceGroup": "[if(not(empty(parameters('resourceGroupName'))), parameters('resourceGroupName'), format('{0}{1}', variables('abbrs').resourcesResourceGroups, parameters('environmentName')))]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "name": "[if(not(empty(parameters('containerInstanceName'))), createObject('value', parameters('containerInstanceName')), createObject('value', format('{0}web-{1}', variables('abbrs').containerInstanceContainerGroups, variables('resourceToken'))))]",
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "tags": {
+            "value": "[union(variables('tags'), createObject('azd-service-name', 'web'))]"
+          },
+          "containerImage": {
+            "value": "[format('{0}/{1}:{2}', if(parameters('useExistingAcr'), if(empty(parameters('acrResourceGroupName')), reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, if(not(empty(parameters('resourceGroupName'))), parameters('resourceGroupName'), format('{0}{1}', variables('abbrs').resourcesResourceGroups, parameters('environmentName')))), 'Microsoft.ContainerRegistry/registries', variables('resolvedAcrName')), '2023-07-01').loginServer, reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('acrResourceGroupName')), 'Microsoft.ContainerRegistry/registries', variables('resolvedAcrName')), '2023-07-01').loginServer), reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, if(not(empty(parameters('resourceGroupName'))), parameters('resourceGroupName'), format('{0}{1}', variables('abbrs').resourcesResourceGroups, parameters('environmentName')))), 'Microsoft.Resources/deployments', 'registry'), '2025-04-01').outputs.loginServer.value), parameters('containerImageName'), parameters('containerImageTag'))]"
+          },
+          "containerPort": {
+            "value": "[parameters('containerPort')]"
+          },
+          "dnsNameLabel": {
+            "value": "[variables('resolvedDnsNameLabel')]"
+          },
+          "identityId": {
+            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, if(not(empty(parameters('resourceGroupName'))), parameters('resourceGroupName'), format('{0}{1}', variables('abbrs').resourcesResourceGroups, parameters('environmentName')))), 'Microsoft.Resources/deployments', 'container-identity'), '2025-04-01').outputs.id.value]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.44.1.10279",
+              "templateHash": "15559393007846370499"
+            },
+            "description": "Creates an Azure Container Instance that runs a container image from ACR."
+          },
+          "parameters": {
+            "name": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            },
+            "tags": {
+              "type": "object",
+              "defaultValue": {}
+            },
+            "containerImage": {
+              "type": "string"
+            },
+            "containerName": {
+              "type": "string",
+              "defaultValue": "web"
+            },
+            "containerPort": {
+              "type": "int",
+              "defaultValue": 8000
+            },
+            "dnsNameLabel": {
+              "type": "string"
+            },
+            "identityId": {
+              "type": "string"
+            },
+            "cpuCores": {
+              "type": "int",
+              "defaultValue": 1
+            },
+            "memoryInGb": {
+              "type": "string",
+              "defaultValue": "1.5"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.ContainerInstance/containerGroups",
+              "apiVersion": "2023-05-01",
+              "name": "[parameters('name')]",
+              "location": "[parameters('location')]",
+              "tags": "[parameters('tags')]",
+              "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                  "[format('{0}', parameters('identityId'))]": {}
+                }
+              },
+              "properties": {
+                "osType": "Linux",
+                "restartPolicy": "Always",
+                "ipAddress": {
+                  "type": "Public",
+                  "dnsNameLabel": "[parameters('dnsNameLabel')]",
+                  "ports": [
+                    {
+                      "protocol": "TCP",
+                      "port": "[parameters('containerPort')]"
+                    }
+                  ]
+                },
+                "containers": [
+                  {
+                    "name": "[parameters('containerName')]",
+                    "properties": {
+                      "image": "[parameters('containerImage')]",
+                      "ports": [
+                        {
+                          "protocol": "TCP",
+                          "port": "[parameters('containerPort')]"
+                        }
+                      ],
+                      "resources": {
+                        "requests": {
+                          "cpu": "[parameters('cpuCores')]",
+                          "memoryInGB": "[json(parameters('memoryInGb'))]"
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "outputs": {
+            "fqdn": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.ContainerInstance/containerGroups', parameters('name')), '2023-05-01').ipAddress.fqdn]"
+            },
+            "ipAddress": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.ContainerInstance/containerGroups', parameters('name')), '2023-05-01').ipAddress.ip]"
+            },
+            "name": {
+              "type": "string",
+              "value": "[parameters('name')]"
+            },
+            "uri": {
+              "type": "string",
+              "value": "[format('http://{0}:{1}', reference(resourceId('Microsoft.ContainerInstance/containerGroups', parameters('name')), '2023-05-01').ipAddress.fqdn, parameters('containerPort'))]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, if(not(empty(parameters('resourceGroupName'))), parameters('resourceGroupName'), format('{0}{1}', variables('abbrs').resourcesResourceGroups, parameters('environmentName')))), 'Microsoft.Resources/deployments', 'registry')]",
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('acrResourceGroupName')), 'Microsoft.Resources/deployments', 'acr-pull-role')]",
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, if(not(empty(parameters('resourceGroupName'))), parameters('resourceGroupName'), format('{0}{1}', variables('abbrs').resourcesResourceGroups, parameters('environmentName')))), 'Microsoft.Resources/deployments', 'acr-pull-role')]",
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, if(not(empty(parameters('resourceGroupName'))), parameters('resourceGroupName'), format('{0}{1}', variables('abbrs').resourcesResourceGroups, parameters('environmentName')))), 'Microsoft.Resources/deployments', 'container-identity')]",
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', if(not(empty(parameters('resourceGroupName'))), parameters('resourceGroupName'), format('{0}{1}', variables('abbrs').resourcesResourceGroups, parameters('environmentName'))))]"
+      ]
+    }
+  ],
+  "outputs": {
+    "AZURE_CONTAINER_REGISTRY_ENDPOINT": {
+      "type": "string",
+      "value": "[if(parameters('useExistingAcr'), if(empty(parameters('acrResourceGroupName')), reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, if(not(empty(parameters('resourceGroupName'))), parameters('resourceGroupName'), format('{0}{1}', variables('abbrs').resourcesResourceGroups, parameters('environmentName')))), 'Microsoft.ContainerRegistry/registries', variables('resolvedAcrName')), '2023-07-01').loginServer, reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('acrResourceGroupName')), 'Microsoft.ContainerRegistry/registries', variables('resolvedAcrName')), '2023-07-01').loginServer), reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, if(not(empty(parameters('resourceGroupName'))), parameters('resourceGroupName'), format('{0}{1}', variables('abbrs').resourcesResourceGroups, parameters('environmentName')))), 'Microsoft.Resources/deployments', 'registry'), '2025-04-01').outputs.loginServer.value)]"
+    },
+    "AZURE_CONTAINER_REGISTRY_NAME": {
+      "type": "string",
+      "value": "[variables('resolvedAcrName')]"
+    },
+    "AZURE_LOCATION": {
+      "type": "string",
+      "value": "[parameters('location')]"
+    },
+    "AZURE_TENANT_ID": {
+      "type": "string",
+      "value": "[tenant().tenantId]"
+    },
+    "SERVICE_WEB_FQDN": {
+      "type": "string",
+      "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, if(not(empty(parameters('resourceGroupName'))), parameters('resourceGroupName'), format('{0}{1}', variables('abbrs').resourcesResourceGroups, parameters('environmentName')))), 'Microsoft.Resources/deployments', 'web'), '2025-04-01').outputs.fqdn.value]"
+    },
+    "SERVICE_WEB_NAME": {
+      "type": "string",
+      "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, if(not(empty(parameters('resourceGroupName'))), parameters('resourceGroupName'), format('{0}{1}', variables('abbrs').resourcesResourceGroups, parameters('environmentName')))), 'Microsoft.Resources/deployments', 'web'), '2025-04-01').outputs.name.value]"
+    },
+    "SERVICE_WEB_URI": {
+      "type": "string",
+      "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, if(not(empty(parameters('resourceGroupName'))), parameters('resourceGroupName'), format('{0}{1}', variables('abbrs').resourcesResourceGroups, parameters('environmentName')))), 'Microsoft.Resources/deployments', 'web'), '2025-04-01').outputs.uri.value]"
+    }
+  }
+}
