@@ -1,0 +1,15 @@
+.git
+.github
+.azure
+.vscode
+__pycache__
+*.py[cod]
+*$py.class
+.venv
+venv
+env
+.env
+.DS_Store
+infra
+*.md
+.azure
