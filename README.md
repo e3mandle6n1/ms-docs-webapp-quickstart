@@ -1,8 +1,8 @@
 # msdocs-webapp-quickstart
 
-[![Deploy Azure Container Instances](https://github.com/e3mandle6n1/ms-docs-webapp-quickstart//actions/workflows/azure-dev.yml/badge.svg)](https://github.com/e3mandle6n1/msdocs-webapp-quickstart/actions/workflows/azure-dev.yml)
+[![Deploy Azure Container Instances](https://github.com/e3mandle6n1/ms-docs-webapp-quickstart/actions/workflows/azure-dev.yml/badge.svg)](https://github.com/e3mandle6n1/msdocs-webapp-quickstart/actions/workflows/azure-dev.yml)
 
-[![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=fff)](#run-in-docker)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=fff)](#run-with-docker)
 ![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
 ![Uvicorn](https://img.shields.io/badge/Uvicorn-ASGI-000000)
@@ -12,22 +12,9 @@
 ![Azure Developer CLI](https://img.shields.io/badge/Azure_Developer_CLI-azd-0078D4?logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyBpZD0idXVpZC1mYmJiZWVkZi03ZjAzLTRkNjItYjBmMC1hNGI2ODljMDQxZDkiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjE4IiBoZWlnaHQ9IjE4IiB2aWV3Qm94PSIwIDAgMTggMTgiPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0idXVpZC03Y2QwYWU0Ny02NDE0LTRiOTMtYWJjOS1hNzA1MTk3MDEzN2EiIHgxPSI5IiB5MT0iMTYuNjg2IiB4Mj0iOSIgeTI9IjEzLjM3NyIgZ3JhZGllbnRUcmFuc2Zvcm09Im1hdHJpeCgxLCAwLCAwLCAxLCAwLCAwKSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIG9mZnNldD0iLjAwMSIgc3RvcC1jb2xvcj0iIzM3YzJiMSIgLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMzY2Q0YzIiIC8%2BPC9saW5lYXJHcmFkaWVudD48L2RlZnM%2BPHBhdGggZD0iTTE4LDE2LjY4NkgwbDMuMzMyLTMuMTQ5Yy4xMDgtLjEwMi4yNTEtLjE2LjQtLjE2SDE0LjY4Yy4wODMsMCwuMTY1LC4wMTksLjI0LC4wNTMsLjA3NiwuMDM1LC4xNDMsLjA4NSwuMTk4LC4xNDdsMi44ODIsMy4xMDlaIiBmaWxsPSJ1cmwoI3V1aWQtN2NkMGFlNDctNjQxNC00YjkzLWFiYzktYTcwNTE5NzAxMzdhKSIgLz48cGF0aCBkPSJNMCwxNi42ODZIMTh2LjQxYzAsLjE1NS0uMDYyLC4zMDUtLjE3MiwuNDE0cy0uMjU5LC4xNzItLjQxNCwuMTcySC41ODZjLS4xNTUsMC0uMzA0LS4wNjItLjQxNC0uMTcyLS4xMS0uMTEtLjE3Mi0uMjU5LS4xNzItLjQxNHYtLjQxWiIgZmlsbD0iIzNjZDRjMiIgLz48cGF0aCBkPSJNMTcuNDMsOC42MThjLS4wMjYtLjg5OS0uMzcxLTEuNzU5LS45NzQtMi40MjYtLjYwMy0uNjY3LTEuNDI0LTEuMDk3LTIuMzE2LTEuMjE0LS4wNTItMS4yNTYtLjU5OC0yLjQ0Mi0xLjUyLTMuMjk3LS45MjEtLjg1Ni0yLjE0NC0xLjMxMy0zLjQtMS4yNzMtMS4wMTQtLjAxNy0yLjAwOCwuMjgxLTIuODQ2LC44NTItLjgzOCwuNTcxLTEuNDc5LDEuMzg4LTEuODM0LDIuMzM4LTEuMDc4LC4xMjQtMi4wNzUsLjYzMi0yLjgwOSwxLjQzMS0uNzM0LC43OTktMS4xNTcsMS44MzUtMS4xOTEsMi45MTksLjAxOCwuNjA4LC4xNTYsMS4yMDYsLjQwNywxLjc2LC4yNTEsLjU1NCwuNjA4LDEuMDUzLDEuMDUzLDEuNDY3LC40NDQsLjQxNSwuOTY3LC43MzcsMS41MzcsLjk0OSwuNTcsLjIxMiwxLjE3NiwuMzA4LDEuNzg0LC4yODRIMTMuNjNjMS4wMDMtLjAxLDEuOTYyLS40MTMsMi42NzItMS4xMjEsLjcxLS43MDgsMS4xMTUtMS42NjYsMS4xMjgtMi42NjlaIiBmaWxsPSJ1cmwoI3V1aWQtYjEwMWFlNDUtNDYxYS00ZGU3LWIxYTAtZjNlMjllYTk2Y2M3KSIgLz48cGF0aCBkPSJNNi4zNiw2Ljg2OGwyLjY0LTIuNTljLjAyOC0uMDI5LC4wNjEtLjA1MiwuMDk4LS4wNjcsLjAzNy0uMDE2LC4wNzctLjAyNCwuMTE3LS4wMjRzLjA4LC4wMDgsLjExNywuMDI0Yy4wMzcsLjAxNiwuMDcsLjAzOCwuMDk4LC4wNjdsMi41NywyLjU5Yy4wMjIsLjAxOCwuMDM4LC4wNDMsLjA0NSwuMDcsLjAwNywuMDI4LC4wMDQsLjA1Ny0uMDA3LC4wODMtLjAxMSwuMDI2LS4wMzEsLjA0OC0uMDU2LC4wNjItLjAyNSwuMDE0LS4wNTQsLjAxOS0uMDgyLC4wMTVoLTEuNjJjLS4wMzYsLjAwMi0uMDcxLC4wMTgtLjA5NiwuMDQ0LS4wMjYsLjAyNi0uMDQxLC4wNi0uMDQ0LC4wOTZsLS4wMjEsNS4wNzJjMCwuMDI5LS4wMTIsLjA1Ny0uMDMyLC4wNzgtLjAyMSwuMDIxLS4wNDksLjAzMi0uMDc4LC4wMzJoLTEuNzRjLS4wMjksMC0uMDU3LS4wMTItLjA3OC0uMDMyLS4wMjEtLjAyMS0uMDMyLS4wNDktLjAzMi0uMDc4bC4wMjEtNS4wNzJjMC0uMDM1LS4wMTMtLjA3LS4wMzctLjA5Ni0uMDI0LS4wMjYtLjA1Ny0uMDQyLS4wOTMtLjA0NGgtMS42Yy0uMDI3LC4wMDItLjA1NC0uMDA2LS4wNzctLjAycy0uMDQxLS4wMzYtLjA1MS0uMDYyYy0uMDEtLjAyNS0uMDEyLS4wNTMtLjAwNS0uMDgsLjAwNy0uMDI2LC4wMjItLjA1LC4wNDMtLjA2OFoiIGZpbGw9IiNmMmYyZjIiIC8%2BPC9nPjwvc3ZnPg%3D%3D)
 ![Bicep](https://img.shields.io/badge/Bicep-IaC-0078D4?logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyBpZD0iZTRiYTVkMmItZTZlNC00MTAxLTkzYWMtN2M2YjNkNTY4YTI3IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDE4IDE4Ij48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImJkMmY5NDk0LWQzZmYtNDNiZC1iNTk5LTRlYzE3MGYwOTBiZCIgeDE9IjguNjMiIHkxPSIxNy41OSIgeDI9IjguNjMiIHkyPSIwLjU5IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI%2BPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMDA3OGQ0IiAvPjxzdG9wIG9mZnNldD0iMC44MiIgc3RvcC1jb2xvcj0iIzVlYTBlZiIgLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48dGl0bGU%2BSWNvbi1nZW5lcmFsLTk8L3RpdGxlPjxwYXRoIGQ9Ik05LjU5LjcySDIuMzZhLjU2LjU2LDAsMCwwLS41Ny41N3YxNS42YS41Ni41NiwwLDAsMCwuNTcuNTdIMTQuODlhLjU3LjU3LDAsMCwwLC41OC0uNTdWNi41NkEuNTguNTgsMCwwLDAsMTQuODksNkgxMC43M2EuNTcuNTcsMCwwLDEtLjU3LS41N1YxLjI5QS41Ni41NiwwLDAsMCw5LjU5LjcyWiIgZmlsbD0iI2ZmZiIgLz48cGF0aCBkPSJNOS4zMywxLjQ1VjUuMzdBMS40MywxLjQzLDAsMCwwLDEwLjc2LDYuOGg0djkuOTNIMi41NFYxLjQ1SDkuMzNNOS42LjU5SDIuMjZhLjU4LjU4LDAsMCwwLS41OC41OFYxN2EuNTguNTgsMCwwLDAsLjU4LjU4SDE1YS41OC41OCwwLDAsMCwuNTgtLjU4VjYuNTNBLjU4LjU4LDAsMCwwLDE1LDZIMTAuNzZhLjU4LjU4LDAsMCwxLS41OC0uNThWMS4xN0EuNTguNTgsMCwwLDAsOS42LjU5WiIgZmlsbD0idXJsKCNiZDJmOTQ5NC1kM2ZmLTQzYmQtYjU5OS00ZWMxNzBmMDkwYmQpIiAvPjxwYXRoIGQ9Ik0xNS4zNSw2LjA2LDEwLC43MlY1LjA3YTEsMSwwLDAsMCwxLDFaIiBmaWxsPSIjMDA3OGQ0IiAvPjwvc3ZnPg%2B)
 
-FastAPI web app exercise for testing **Azure Container Instances (ACI)** and building **containerised solutions on Azure**. The app is packaged as a Docker image, pushed to **Azure Container Registry (ACR)**, and deployed with [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/) (`azd`) + Bicep.
+FastAPI web app exercise for testing **Azure Container Instances (ACI)** and building **containerised solutions on Azure**. The app runs only in Docker — locally via Compose, in **Azure Container Registry (ACR)**, and on ACI provisioned with [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/) (`azd`) + Bicep.
 
-## Run locally
-
-Create and activate a virtual environment, install dependencies, and start the app:
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-uvicorn main:app --reload
-```
-
-Open [http://127.0.0.1:8000](http://127.0.0.1:8000).
-
-## Run in Docker
+## Run with Docker
 
 Build and run with Docker Compose (port 8000):
 
@@ -70,9 +57,9 @@ az acr build --registry <registry-name> --image fastapi-webapp:<tag> .
 
 ### Notes
 
-- `docker-compose.yml` targets `linux/amd64` so local builds match what ACI expects in Azure.
+- `docker-compose.yml` targets `linux/amd64` so images built locally match what ACI expects in Azure.
 - Images built only for `arm64` (default on Apple Silicon without `--platform`) will fail on ACI with an OS/architecture mismatch error.
-- The container is for local development and registry practice. Production hosting in this repo is **ACI**, provisioned via `azd provision` below.
+- Production hosting is **ACI**, provisioned via `azd provision` below.
 
 ## Deploy to Azure (ACI)
 
