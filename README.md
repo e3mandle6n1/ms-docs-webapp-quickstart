@@ -1,4 +1,6 @@
-# msdocs-python-fastapi-webapp-quickstart
+# msdocs-webapp-quickstart
+
+[![Deploy Azure Container Instances](https://github.com/e3mandle6n1/ms-docs-webapp-quickstart//actions/workflows/azure-dev.yml/badge.svg)](https://github.com/e3mandle6n1/msdocs-webapp-quickstart/actions/workflows/azure-dev.yml)
 
 [![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=fff)](#run-in-docker)
 ![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)
