@@ -9,6 +9,7 @@ param containerName string = 'web'
 param containerPort int = 8000
 param dnsNameLabel string
 param identityId string
+param acrLoginServer string
 
 param cpuCores int = 1
 param memoryInGb string = '1.5'
@@ -26,6 +27,12 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2023-05-01'
   properties: {
     osType: 'Linux'
     restartPolicy: 'Always'
+    imageRegistryCredentials: [
+      {
+        server: acrLoginServer
+        identity: identityId
+      }
+    ]
     ipAddress: {
       type: 'Public'
       dnsNameLabel: dnsNameLabel

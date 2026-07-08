@@ -118,6 +118,7 @@ module web './core/host/containerinstance.bicep' = {
     containerPort: containerPort
     dnsNameLabel: resolvedDnsNameLabel
     identityId: containerIdentity.outputs.id
+    acrLoginServer: acrLoginServer
   }
   dependsOn: [
     acrPullRoleSameRg
